@@ -53,7 +53,7 @@ def currency():
     # Contact API
     try:
         currency_api_key = os.environ.get('liloshipping_currency_api_key')
-        response = requests.get(f'http://free.currconv.com/api/v7/convert?q=USD_PHP&compact=ultra&apiKey=' + currency_api_key)
+        response = requests.get(f'https://free.currconv.com/api/v7/convert?q=USD_PHP&compact=ultra&apiKey=' + currency_api_key)
         response.raise_for_status()
     except requests.RequestException:
         abort(403)

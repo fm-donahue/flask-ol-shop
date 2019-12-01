@@ -1,0 +1,204 @@
+{% extends "layout.html" %}
+{% from "macros.html" import nav_links_shipments with context %}
+{% from "macros.html" import nav_conditions with context %}
+
+{% set endpoint = request.path.split('/') %}
+
+{% block title %}
+    Shipments
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <nav class="navbar navbar-expand-md navbar-light mb-4">
+            <ul class="navbar-nav contents mr-auto">
+                <li class="nav-item mr-5"><a class="nav-link" href="{{ url_for('carts.cart') }}">Cart</a></li>
+                <li class="nav-item active"><a class="nav-link" href="{{ url_for('ship.shipments', sub_nav='all') }}">Shipments</a></li>
+            </ul>
+        </nav>
+        <ul class="nav nav-tabs mt-3 mb-4">
+            {{ nav_links_shipments('all', 'All') }}
+            {{ nav_links_shipments('pending_payment', 'Pending Payment') }}
+            {{ nav_links_shipments('prepare_shipment', 'Preparing for Shipment') }}
+            {{ nav_links_shipments('on_its_way', 'On its Way') }}
+            {{ nav_links_shipments('delivered', 'Delivered') }}
+        </ul>
+        {% if orders.items %}
+            {% for order in orders.items %}
+                <div class="card mb-3">
+                    <div class="card-header">
+                        <div class="row align-items-center p-2">
+                            <div class="col-md m-1">
+                                    <span class="font-weight-bold">Transaction No: </span>{{ order.id | transaction_id }}
+                            </div>
+                            <div class="col-md m-1">
+                                    <span class="font-weight-bold">Transaction Date: </span><span class="d-inline-block">{{ order.order_date | date_format }} </span> 
+                            </div>
+                            <div class="text-md-right col-md m-1">
+                                {% if order.shipment.estimated_date %}
+                                    <span class="font-weight-bold">Estimated Delivery Date: </span ><span class="d-inline-block">{{ order.shipment.estimated_date | date_format }}</span>
+                                {% else %}
+                                    <span class="font-weight-bold">Estimated Delivery Date: </span><span class="d-inline-block">PENDING</span> 
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-4 my-auto">
+                                <div class="card shadow-sm" id="image_box">
+                                    {% if order.order_status == 'PENDING' %}
+                                        <img class="card-img" src="{{ url_for('static', filename='pics/' + order.cart.picture_file) }}" alt="{{ order.cart.item_name }}">
+                                    {% else %}
+                                        <img class="d-block w-100" src="{{ url_for('static', filename=order.shipment.picture1) }}">
+                                        
+                                        <!-- Button trigger modal -->
+                                        <button type="button" class="btn btn-outline-secondary btn-sm text-center" data-toggle="modal" data-target="#picturesModal{{ loop.index }}">
+                                            View Image
+                                        </button>
+                                          
+                                        <!-- Modal -->
+                                        <div class="modal fade" id="picturesModal{{ loop.index }}" tabindex="-1" role="dialog" aria-labelledby="picturesModal{{ loop.index }}Title" aria-hidden="true">
+                                            <div class="modal-dialog modal-dialog-centered" role="document">
+                                                <div class="modal-content">
+                                                    <div class="modal-body">
+                                                        <div id="carouselPictures{{ loop.index }}" class="carousel slide" data-ride="carousel">
+                                                            <div class="carousel-inner">
+                                                                <div class="carousel-item active">                                                       
+                                                                    <img class="d-block w-100" src="{{ url_for('static', filename=order.shipment.picture1) }}" alt="First slide">
+                                                                </div>
+                                                                <div class="carousel-item">
+                                                                    <img class="d-block w-100" src="{{ url_for('static', filename=order.shipment.picture2) }}" alt="Second slide">
+                                                                </div>
+                                                                <div class="carousel-item">
+                                                                    <img class="d-block w-100" src="{{ url_for('static', filename=order.shipment.picture3) }}" alt="Third slide">
+                                                                </div>
+                                                            </div>
+                                                            <a class="carousel-control-prev" href="#carouselPictures{{ loop.index }}" role="button" data-slide="prev">
+                                                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                                                <span class="sr-only">Previous</span>
+                                                            </a>
+                                                            <a class="carousel-control-next" href="#carouselPictures{{ loop.index }}" role="button" data-slide="next">
+                                                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                                                <span class="sr-only">Next</span>
+                                                            </a>
+                                                            </div>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-md-4 p-2">
+                                <div class="card-body">                               
+                                    <p class="card-title"><span class="font-weight-bold">ITEM NAME:</span><br>{{ order.cart.item_name }}</p>
+                                    <small>by {{ order.cart.brand }}</small>
+                                    <p class="mt-4">Quantity: {{ order.cart.quantity }}</p>
+                                    <p class="mt-2"><span class="font-weight-bold">Total Price: </span><span id="price">{{ order.total_price | php }}</span></p>
+                                    {% if order.order_status != 'PENDING' %}
+                                        <p class="mt-2"><span class="font-weight-bold">Balance: </span><span id="price">{{ order.balance | float | php }}</span></p>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-md-4 p-2">
+                                <div class="card-body ml-5">                               
+                                    <small>Status:</small>
+                                    <div class="mb-4">
+                                        <button class="btn btn-outline-dark" disabled>{{ order.order_status }}</button>
+                                    </div>
+                                    {% if order.shipment.tracking_number %}
+                                        <small>Tracking No: {{ order.shipment.tracking_number }}</small>
+                                    {% else %}
+                                        <small>Tracking No: PENDING</small>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <div class="col-lg-6 float-right">                   
+                            <a role="button" id="transaction_details" class="btn btn-sm btn-block font-weight-bold text-left mr-2" data-toggle="collapse" data-target="#transaction_details-{{ loop.index }}" aria-expanded="false" aria-controls="transaction_details">
+                                Transaction Details
+                                <div class="collapse font-weight-normal p-3" id="transaction_details-{{ loop.index }}">   
+                                    <div class="row justify-content-end align-items-end">                             
+                                        <div class="col-4 text-right">Item Price:</div>
+                                        <div class="col-4 text-right">{{ order.cart.price | usd }}</div>
+                                    </div>
+                                    <div class="row justify-content-end align-items-end">                             
+                                        <div class="col-4 text-right">Quantity:</div>
+                                        <div class="col-4 text-right">{{ order.cart.quantity }}</div>
+                                    </div>
+                                    <div class="row justify-content-end align-items-end">                             
+                                        <div class="col-4 text-right" id="total_price_quantity">{{ (order.cart.price * order.cart.quantity) | usd }}</div>
+                                    </div>
+                                    <div class="row justify-content-end align-items-end">                             
+                                        <div class="col-4 text-right">PHP Rate:</div>
+                                        <div class="col-4 text-right">{{ order.cart.php_rate | php }}</div>
+                                    </div>
+                                    <div class="row justify-content-end align-items-end">                             
+                                        <div class="col-4 text-right" id="total_item_price">{{ (order.total_price - order.markup_price) | php }}</div>
+                                    </div>
+                                    <div class="row justify-content-end align-items-end">                             
+                                        <div class="col-4 text-right">Markup:</div>
+                                        <div class="col-4 text-right">{{ order.markup_price | php }}</div>
+                                    </div>
+                                    <div class="row justify-content-end align-items-end">                             
+                                        <div class="col-4 text-right">Total Price:</div>
+                                        <div class="col-4 text-right" id="total_price">{{ order.total_price | php }}</div>
+                                    </div>
+                                </div>
+                            </a>                       
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+            {% if orders.pages > 1 %}
+                <nav aria-label="Page navigation">
+                    <ul class="pagination pagination-sm justify-content-end">
+                        {% if orders.page != 1 %}
+                            <li class="page-item">
+                                <a class="page-link" href="{{ url_for('ship.shipments', sub_nav=endpoint[2], page=1) }}" aria-label="Previous">
+                                    <span aria-hidden="true">&laquo;</span>
+                                    <span class="sr-only">Previous</span>
+                                </a>
+                            </li>
+                        {% endif %}
+                        {% for page_num in orders.iter_pages(left_current=1, right_current=2) %}
+                            {% if page_num %}
+                                {% if orders.page == page_num %}
+                                    <li class="page-item active">
+                                        <a class="page-link" href="{{ url_for('ship.shipments', sub_nav=endpoint[2], page=page_num) }}">{{ page_num }}<span class="sr-only">(current)</span></a>
+                                    </li>
+                                {% else %}
+                                    <li class="page-item"><a class="page-link" href="{{ url_for('ship.shipments', sub_nav=endpoint[2], page=page_num) }}">{{ page_num }}</a></li>
+                                {% endif %}
+                            {% endif %}
+                        {% endfor %}
+                        {% if orders.page != orders.pages  %}
+                            <li class="page-item">
+                                <a class="page-link" href="{{ url_for('ship.shipments', sub_nav=endpoint[2], page=orders.pages) }}" aria-label="Next">
+                                    <span aria-hidden="true">&raquo;</span>
+                                    <span class="sr-only">Next</span>
+                                </a>
+                            </li>
+                        {% endif %}
+                    </ul>
+                </nav>
+            {% endif %}
+        {% else %}
+            <div class="card text-center mt-5" id="cart_empty">
+                <div class="my-auto">
+                    <i class="fas fa-box fa-lg"></i>
+                    <h3>No shipments found.</h3>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+    <script lang="javascript" text="text/javascript">
+        $('.carousel').carousel({interval: 0})
+    </script>
+{% endblock %}

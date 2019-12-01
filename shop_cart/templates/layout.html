@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <!--Required meta tags-->
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <title>{% block title %}{% endblock %}</title>
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css')}}">
+
+        <!--Bootsrap CSS-->
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+        <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+        <script src="https://code.jquery.com/jquery-3.4.1.js" integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU=" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
+        <!--Font Awesome Icon Kit-->
+        <script src="https://kit.fontawesome.com/7f901e9e41.js"></script>
+
+        <title>Shop Cart:</title>
+    </head>
+    <body>
+        <div id="page-container">
+            <div id="content-wrap">
+                <nav class="navbar navbar-expand-md navbar-light bg-light border">
+                    <div class="container">
+                        <button aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler" data-target="#navbar" data-toggle="collapse" type="button">
+                            <span class="navbar-toggler-icon"></span>
+                        </button>
+                        <div class="collapse navbar-collapse" id="navbar">
+                            {% if current_user.is_authenticated %}
+                                <ul class="navbar-nav mr-auto mt-2">
+                                    <li class="nav-item"><a class="nav-link" href="{{ url_for('carts.cart') }}">Home</a></li>
+                                </ul>
+                                <ul class="navbar-nav ml-auto mt-2">
+                                    <li class="nav-item"><a class="nav-link" href="{{ url_for('users.account') }}">Account</a></li>
+                                    <li class="nav-item"><a class="nav-link" href="{{ url_for('users.logout') }}">Logout</a></li>
+                                </ul>
+                            {% else %}
+                                <ul class="navbar-nav ml-auto mt-2">
+                                    <li class="nav-item"><a class="nav-link" href="{{ url_for('users.login') }}">Login</a></li>
+                                    <li class="nav-item"><a class="nav-link" href="{{ url_for('users.register') }}">Register</a></li>
+                                </ul>
+                            {% endif %}
+                        </div>
+                    </div>
+                </nav>
+                {% if get_flashed_messages() %}
+                    <header class="form-signin" id="flash_message">
+                        <div class="container text-center">
+                            {% with messages = get_flashed_messages(with_categories=true) %}
+                                {% if messages %}
+                                    {% for category, message in messages %}
+                                        <div class="alert alert-{{ category }}">
+                                            {{ message }}
+                                        </div>
+                                    {% endfor %}
+                                {% endif %}
+                            {% endwith %}
+                        </div>
+                    </header>
+                {% endif %}           
+                <main>
+                    {% block content %}{% endblock %}
+                </main>
+            </div>
+            <footer id="footer"> 
+                <nav class="navbar navbar-expand-md navbar-light bg-light border">
+                    <div class="container">
+                        <ul id="navbar_footer" class="navbar-nav mx-auto">
+                            <li class="nav-item mr-2"><a class="nav-link" href="#">Prohibited Items</a></li>
+                            <li class="nav-item mr-2"><a class="nav-link" href="#">Track Your Package</a></li>
+                            <li class="nav-item mr-2"><a class="nav-link" href="#">About Us</a></li>
+                            <li class="nav-item mr-2"><a class="nav-link" href="#">Contact Us</a></li>
+                        </ul>
+                    </div>
+                </nav>
+            </footer>  
+        </div>
+
+    </body>
+</html>

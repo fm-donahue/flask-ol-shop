@@ -1,0 +1,253 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Cart
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <nav class="navbar navbar-expand-md navbar-light mb-4">
+            <ul class="navbar-nav contents mr-auto">
+                <li class="nav-item mr-5 active"><a class="nav-link" href="{{ url_for('carts.cart') }}">Cart</a></li>
+                <li class="nav-item"><a class="nav-link" href="{{ url_for('ship.shipments', sub_nav='all') }}">Shipments</a></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">    
+                <li>
+                    <!-- Button trigger modal -->
+                    <button type="button" class="btn btn-outline-secondary float-right" data-toggle="modal" data-target="#AddItemModalCenter">
+                        Add Item
+                    </button>
+                </li>
+            </ul>
+        </nav>
+        <div class="row" id="cart_items">
+            {% if items.items %}
+                <div class="col-lg-9">
+                {% for item in items.items %}
+                    <div class="card mb-3">
+                        <div class="card-header font-weight-bold">
+                            Cart Item #{{ loop.index }}
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="card shadow-sm my-auto" id="image_box">
+                                        <img class="card-img" src="{{ url_for('static', filename='pics/' + item.picture_file) }}" alt="{{ item.item_name }}">
+                                    </div>
+                                </div>
+                                <div class="col-md-3 p-2">
+                                    <div class="card-body ml-2">
+                                        <p class="card-title"><span class="font-weight-bold">ITEM NAME:</span><br>{{ item.item_name }}</p>
+                                        <small>by {{ item.brand }}</small>
+                                        <form class="form-inline mt-1" action="{{ url_for('carts.update_item', cart_id=item.id) }}" method="POST">
+                                            {{ form.hidden_tag() }}
+                                            <div class="form-group mt-3" name="{{ item.id }}">
+                                                {{ form.quantity.label(class="col-form-label col-form-label-sm mr-2") }} 
+                                                {{ form.quantity(class="form-control form-control-sm w-25", placeholder=item.quantity, onchange="updateItems({})".format(item.id), value=item.quantity, min=1) }}
+                                            </div>
+                                            <noscript>
+                                                {{ form.submit(class="btn btn-link btn-sm", value="Update") }}
+                                            </noscript>
+                                        </form >
+                                        <a href="{{ item.url }}" class="btn btn-outline-secondary mt-4" target="_blank">Item's URL</a>
+                                    </div>
+                                </div>
+                                <div class="col-md p-2">
+                                    <div class="card-body ml-2">
+                                        <p><span class="font-weight-bold">Price: </span><span id="price">{{ item.price | usd }}</span></p>
+                                        <form action="{{ url_for('carts.update_item', cart_id=item.id) }}" method="POST">  
+                                            {{ form.hidden_tag() }}  
+                                            <button type="button" class="btn btn-outline-secondary mt-2" data-toggle="collapse" data-target="#order_details_{{ loop.index }}">Order Details</button>
+                                            <div class="collapse" id="order_details_{{ loop.index }}">                                        
+                                                <div class="mt-2" name="{{ item.id }}">
+                                                    {% set f = form.order_details.process_data(item.order_details) %}
+                                                    {{ form.order_details(class="form-control form-control-md", rows="5", placeholder=item.order_details, onchange="updateItems({})".format(item.id)) }}
+                                                </div>
+                                                <noscript>
+                                                    {{ form.submit(class="btn btn-link btn-sm float-right", value="Update") }}
+                                                </noscript>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <div class="row float-right">
+                                <button type="button" class="btn btn-outline-secondary mr-2" data-toggle="modal" data-target="#OrderItemModal_{{ loop.index }}">
+                                    Order
+                                </button>
+                                <button type="button" class="btn btn-outline-danger mr-4" data-toggle="modal" data-target="#DeleteItemModal_{{ loop.index }}">
+                                    Cancel
+                                </button>                         
+                            </div>
+                        </div>
+                        <div class="modal fade" id="OrderItemModal_{{ loop.index }}" tabindex="-1" role="dialog" aria-labelledby="OrderItemModalTitle" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered modal-md" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="OrderItemModalLabel">Purchase Item?</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <p class="font-weight-bold"> Cart Item #{{ loop.index }}</p>
+                                        <p>{{ item.item_name }}</p>
+                                        <p>For: <span id="order_total_price{{ item.id }}">{{ ((item.price * item.quantity * php_rate) + markup_price) | round_up() | php }}</span></p>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                        <form action="{{ url_for('carts.order_item', cart_id=item.id) }}" method="POST">
+                                            <input type="submit" class="btn btn-outline-danger" value="Order">
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal fade" id="DeleteItemModal_{{ loop.index }}" tabindex="-1" role="dialog" aria-labelledby="DeleteItemModalTitle" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered modal-md" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="DeleteItemModalLabel">Delete Item?</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <p class="font-weight-bold"> Cart Item #{{ loop.index }}</p>
+                                        <p>{{ item.item_name }}</p>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                        <form action="{{ url_for('carts.delete_item', cart_id=item.id) }}" method="POST">
+                                            <input type="submit" class="btn btn-outline-danger" value="Delete">
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div> 
+                    </div>
+                {% endfor %}
+                {% if items.pages > 1 %}
+                    <nav aria-label="Page navigation">
+                        <ul class="pagination pagination-sm justify-content-end">
+                            {% if items.page != 1 %}
+                                <li class="page-item">
+                                    <a class="page-link" href="{{ url_for('carts.cart', page=1) }}" aria-label="Previous">
+                                        <span aria-hidden="true">&laquo;</span>
+                                        <span class="sr-only">Previous</span>
+                                    </a>
+                                </li>
+                            {% endif %}
+                            {% for page_num in items.iter_pages(left_current=1, right_current=2) %}
+                                {% if page_num %}
+                                    {% if items.page == page_num %}
+                                        <li class="page-item active">
+                                            <a class="page-link" href="{{ url_for('carts.cart', page=page_num) }}">{{ page_num }}<span class="sr-only">(current)</span></a>
+                                        </li>
+                                    {% else %}
+                                        <li class="page-item"><a class="page-link" href="{{ url_for('carts.cart', page=page_num) }}">{{ page_num }}</a></li>
+                                    {% endif %}
+                                {% endif %}
+                            {% endfor %}
+                            {% if items.page != items.pages  %}
+                                <li class="page-item">
+                                    <a class="page-link" href="{{ url_for('carts.cart', page=items.pages) }}" aria-label="Next">
+                                        <span aria-hidden="true">&raquo;</span>
+                                        <span class="sr-only">Next</span>
+                                    </a>
+                                </li>
+                            {% endif %}
+                        </ul>
+                    </nav>
+            {% endif %}
+            </div>
+            <div class="col" id="summary_items">
+                <div class="sticky">
+                    <div class="card bg-light mb-2">
+                        <div class="card-body">
+                            <p class="mb-0"><span class="font-weight-bold" id="php_rate">PHP Rate:</span> {{ php_rate | php }}</p>
+                        </div>
+                    </div>
+                    <div class="card bg-light">
+                        <div class="card-body">
+                            {% for item in items.items %}
+                                <h6 class="card-title mt-2 mb-1">Cart Item #{{ loop.index }}</h6>
+                                <div class="row justify-content-end align-items-end">                             
+                                    <div class="col-6 text-right">Total Price:</div>
+                                    <div class="col-6 text-right"><span id="cart_total_price{{ item.id }}">{{ ((item.price * item.quantity * php_rate) + markup_price) | round_up() | php }}</span></div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                        <div>
+                            <small class="float-right pt-3 mb-0"><span class="text-muted">w/ markup price</span></small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% else %}
+                <div class="col-lg">
+                    <div class="card text-center mt-5" id="cart_empty">
+                        <div class="my-auto">
+                            <i class="fas fa-shopping-cart fa-lg"></i>
+                            <h3>Your cart is empty.</h3>
+                            <p>Add items!</p>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+    <!-- Modal -->
+    <div class="modal fade" id="AddItemModalCenter" tabindex="-1" role="dialog" aria-labelledby="AddItemModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <form method="POST" action="{{ url_for('carts.cart') }}" enctype="multipart/form-data">
+                        {{ form.hidden_tag() }}
+                        <div class="form-group">
+                            {{ form.item_name.label(class="form-control-label") }} 
+                            {{ form.item_name(class="form-control form-control-md", placeholder="Item Name") }}
+                        </div>
+                        <div class="form-group">
+                            {{ form.brand.label(class="form-control-label") }} 
+                            {{ form.brand(class="form-control form-control-md", placeholder="Brand") }}
+                        </div>
+                        <div class="form-group">
+                            {{ form.quantity.label(class="form-control-label") }} 
+                            {{ form.quantity(class="form-control form-control-md", placeholder="Quantity", min=1) }}
+                        </div>
+                        <div class="form-group">
+                            {{ form.price.label(class="form-control-label") }} 
+                            {{ form.price(class="form-control form-control-md", placeholder="Price", min=1, step=0.01) }}
+                        </div>
+                        <div class="form-group">
+                            {{ form.order_details.label(class="form-control-label") }} 
+                            {{ form.order_details(class="form-control form-control-md") }}
+                        </div>
+                        <div class="form-group">
+                            {{ form.url.label(class="form-control-label") }} 
+                            {{ form.url(class="form-control form-control-md", placeholder="Paste item's website") }}
+                        </div>
+                        <div class="form-group">
+                            {{ form.picture.label(class="form-control-label") }} 
+                            {{ form.picture(class="form-control-file") }}
+                            {% if form.picture.errors %}
+                                {% for error in form.picture.errors %}
+                                    <span class="text-danger">{{ error }}</span><br>
+                                {% endfor %}
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-danger" data-dismiss="modal">Close</button>
+                        {{ form.submit(class="btn btn-outline-secondary") }}
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script>var numberOfItems = {{ items.items | length }};</script>
+    <script lang="javascript" text="text/javascript" src="{{ url_for('static', filename='scripts/cart.js') }}"></script>
+{% endblock %}

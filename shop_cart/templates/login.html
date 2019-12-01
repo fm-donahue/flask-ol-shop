@@ -1,0 +1,55 @@
+{% extends "layout.html" %}
+
+
+{% block title %}
+    Login
+{% endblock %}
+
+{% block content %}
+    <div class="login text-center">
+        <form class="needs-validation" id="form-signin" method="POST" novalidate>
+            {{ form.hidden_tag() }}
+            <h1 class="h3 mb-3 font-weight-normal">Please login</h1>
+            <div class="form-group">        
+                {% if form.email.errors %}
+                    {{ form.email(class="form-control form-control-md is-invalid") }}
+                    <div class="invalid-feedback">
+                        {% for error in form.email.errors %}
+                            <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    {{ form.email(class="form-control form-control-md", placeholder="Email") }}
+                {% endif %}    
+            </div>
+            <div class="form-group">
+                {% if form.password.errors %}
+                    {{ form.password(class="form-control form-control-md is-invalid") }}
+                    <div class="invalid-feedback">
+                        {% for error in form.password.errors %}
+                            <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    {{ form.password(class="form-control form-control-md", placeholder="Password") }}
+                {% endif %}    
+            </div>
+            <div class="form-group" id="submit_reg">
+                {{ form.submit(class="btn btn-outline-info") }}
+            </div>
+            <div class="form-check pb-2">
+                {{ form.rememberMe(class="form-check-input") }}
+                {{ form.rememberMe.label(class="form-check-label") }}
+            </div>
+            <small class="text-muted">
+                <a href="{{ url_for('users.reset_request') }}"> Forgot Password? </a>
+            </small>
+            <div class="mt-2">
+                <small class="text-muted">
+                    Create an account 
+                    <a class="p-3" href="{{ url_for('users.register') }}">Sign Up</a>
+                </small>
+            </div>
+        </form>
+    </div>
+{% endblock %}

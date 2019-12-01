@@ -1,0 +1,11 @@
+{% macro nav_links_shipments(endpoint, name) %}
+    {% if request.path.endswith(endpoint) %}
+        <li class="nav-item">
+            <a class="nav-link active" href="{{ url_for('ship.shipments', sub_nav=endpoint) }}">{{ name }}</a>
+        </li>
+    {% else %}
+        <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('ship.shipments', sub_nav=endpoint) }}">{{ name }}</a>
+        </li>
+    {% endif %}
+{% endmacro %}

@@ -1,0 +1,101 @@
+{% extends "layout.html" %}
+
+
+{% block title %}
+    Account
+{% endblock %}
+
+{% block content %}
+    <form class="container w-75" id="account" method="POST" action="">
+        <h1 class="h3 mb-3 font-weight-normal">Account Information</h1>
+        <div class="row">
+            <div class="col-md">
+                {{ form.hidden_tag() }}
+                <div class="form-group">
+                    {{ form.first_name.label(class="form-control-label") }} 
+                    {% if form.first_name.errors %}
+                        {{ form.first_name(class="form-control form-control-md is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.first_name.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.first_name(class="form-control form-control-md") }}
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                    {{ form.last_name.label(class="form-control-label") }}
+                    {% if form.last_name.errors %} 
+                        {{ form.last_name(class="form-control form-control-md is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.last_name.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.last_name(class="form-control form-control-md") }}
+                    {% endif %}
+                </div>
+            </div>
+            <div class="col-md">
+                <div class="form-group" id="email_form">
+                    {{ form.email.label(class="form-control-label") }} 
+                    {% if form.email.errors %}
+                        {{ form.email(class="form-control form-control-md is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.email.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.email(class="form-control form-control-md") }}
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                    {{ form.phone_number.label(class="form-control-label") }} 
+                    {% if form.phone_number.errors %}
+                        {{ form.phone_number(class="form-control form-control-md is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.phone_number.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.phone_number(class="form-control form-control-md") }}
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <button type="button" class="btn btn-outline-info" data-toggle="modal" data-target="#UpdateModal">
+            Update
+        </button>
+        <!-- Modal -->
+        <div class="modal fade" id="UpdateModal" tabindex="-1" role="dialog" aria-labelledby="UpdateModalTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLongTitle">Please Enter Your Password</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            {{ form.password.label(class="form-control-label") }}
+                            {{ form.password(class="form-control form-control-md") }}
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <div>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        </div>
+                        <div class="form-group m-0">
+                            {{ form.submit(class="btn btn-outline-info") }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+{% endblock %}

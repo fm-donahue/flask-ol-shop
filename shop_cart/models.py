@@ -105,49 +105,45 @@ class CartView(MyModelView):
     def view_picture(view, context, model, name):
         if not model.picture_file:
             return ''
-        return Markup('<a href="#viewPictureModal" data-toggle="modal">'
+        return Markup('<a href="#viewPictureModal{0}" data-toggle="modal">'
                       'View Image'
                       '</a>'
-                        '<div class="modal fade" id="viewPictureModal" tabindex="-1" \
-                            role="dialog" aria-labelledby="viewPictureModalLabel">'
+                        '<div class="modal fade" id="viewPictureModal{0}" tabindex="-1" \
+                            role="dialog" aria-labelledby="viewPictureModalLabel{0}">'
                             '<div class="modal-dialog" role="document">'
                                 '<div class="modal-content">'
                                     '<div class="modal-body">'
-                                        '<img src={}>'
+                                        '<img src={1}>'
                                     '</div>'
                                     '<div class="modal-footer">'
                                         '<button type="button" class="btn btn-default" \
                                         data-dismiss="modal">Close</button>'
-                                        '<button type="button" class="btn btn-primary">\
-                                        Save changes</button>'
                                     '</div>'
                                 '</div>'
                             '</div>'
-                        '</div>'.format(url_for('static', filename='pics/' + model.picture_file)))
+                        '</div>'.format(model.id, url_for('static', filename='pics/' + model.picture_file)))
 
     def view_details(view, context, model, name):
         if not model.order_details:
             return ''
 
-        return Markup('<a href="#orderDetailsModal" data-toggle="modal">'
+        return Markup('<a href="#orderDetailsModal{0}" data-toggle="modal">'
                       'View Details'
                       '</a>'
-                        '<div class="modal fade" id="orderDetailsModal" tabindex="-1" \
-                            role="dialog" aria-labelledby="orderDetailsModalLabel">'
+                        '<div class="modal fade" id="orderDetailsModal{0}" tabindex="-1" \
+                            role="dialog" aria-labelledby="orderDetailsModalLabel{0}">'
                             '<div class="modal-dialog" role="document">'
                                 '<div class="modal-content">'
                                     '<div class="modal-body">'
-                                        '{}'
+                                        '{1}'
                                     '</div>'
                                     '<div class="modal-footer">'
                                         '<button type="button" class="btn btn-default" \
                                         data-dismiss="modal">Close</button>'
-                                        '<button type="button" class="btn btn-primary">\
-                                        Save changes</button>'
                                     '</div>'
                                 '</div>'
                             '</div>'
-                        '</div>'.format(model.order_details))
+                        '</div>'.format(model.id, model.order_details))
 
     def view_url(view, context, model, name):
         if not model.url:
@@ -166,7 +162,7 @@ class Order(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     total_price = db.Column(db.Float(precision=2), nullable=False)
     balance = db.Column(db.String(10))
-    markup_price = db.Column(db.Integer)
+    shipping_fee = db.Column(db.Integer)
     order_status = db.Column(db.String(10), nullable=False, default='PENDING')
     order_date = db.Column(db.DateTime, index=True, nullable=False, default=datetime.utcnow)
     paid = db.Column(db.Boolean, nullable=False, default=False)
@@ -186,7 +182,7 @@ Cart(ID:{self.cart.id}, {self.cart.item_name})"
 class OrderView(MyModelView):
     can_create = False
     column_list = ['id', 'user_id', 'cart_id', 'total_price', 'balance',
-                   'markup_price', 'order_status', 'order_date', 'paid']
+                   'shipping_fee', 'order_status', 'order_date', 'paid']
     column_sortable_list = ['id', 'user_id', 'order_status', 'order_date', 'paid']
     column_default_sort = ('order_date', True)
     column_filters = ['id', 'user_id', 'order_status']

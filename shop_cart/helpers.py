@@ -56,7 +56,7 @@ def currency():
         response = requests.get(f'https://free.currconv.com/api/v7/convert?q=USD_PHP&compact=ultra&apiKey=' + currency_api_key)
         response.raise_for_status()
     except requests.RequestException:
-        abort(403)
+        abort(500, description='Currency API request failed.')
 
     # Parse response
     try:

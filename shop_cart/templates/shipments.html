@@ -29,10 +29,10 @@
                     <div class="card-header">
                         <div class="row align-items-center p-2">
                             <div class="col-md m-1">
-                                    <span class="font-weight-bold">Transaction No: </span>{{ order.id | transaction_id }}
+                                <span class="font-weight-bold">Transaction No: </span>{{ order.id | transaction_id }}
                             </div>
                             <div class="col-md m-1">
-                                    <span class="font-weight-bold">Transaction Date: </span><span class="d-inline-block">{{ order.order_date | date_format }} </span> 
+                                <span class="font-weight-bold">Transaction Date: </span><span class="d-inline-block">{{ order.order_date | date_format }} </span> 
                             </div>
                             <div class="text-md-right col-md m-1">
                                 {% if order.shipment.estimated_date %}
@@ -47,7 +47,7 @@
                         <div class="row">
                             <div class="col-md-4 my-auto">
                                 <div class="card shadow-sm" id="image_box">
-                                    {% if order.order_status == 'PENDING' %}
+                                    {% if not order.shipment.picture1 %}
                                         <img class="card-img" src="{{ url_for('static', filename='pics/' + order.cart.picture_file) }}" alt="{{ order.cart.item_name }}">
                                     {% else %}
                                         <img class="d-block w-100" src="{{ url_for('static', filename=order.shipment.picture1) }}">
@@ -130,21 +130,21 @@
                                     </div>
                                     <div class="row justify-content-end align-items-end">                             
                                         <div class="col-4 text-right">Quantity:</div>
-                                        <div class="col-4 text-right">{{ order.cart.quantity }}</div>
+                                        <div class="col-4 text-right">x {{ order.cart.quantity }}</div>
                                     </div>
                                     <div class="row justify-content-end align-items-end">                             
                                         <div class="col-4 text-right" id="total_price_quantity">{{ (order.cart.price * order.cart.quantity) | usd }}</div>
                                     </div>
                                     <div class="row justify-content-end align-items-end">                             
                                         <div class="col-4 text-right">PHP Rate:</div>
-                                        <div class="col-4 text-right">{{ order.cart.php_rate | php }}</div>
+                                        <div class="col-4 text-right">x {{ order.cart.php_rate | php }}</div>
                                     </div>
                                     <div class="row justify-content-end align-items-end">                             
-                                        <div class="col-4 text-right" id="total_item_price">{{ (order.total_price - order.markup_price) | php }}</div>
+                                        <div class="col-4 text-right" id="total_item_price">{{ (order.total_price - order.shipping_fee) | php }}</div>
                                     </div>
                                     <div class="row justify-content-end align-items-end">                             
-                                        <div class="col-4 text-right">Markup:</div>
-                                        <div class="col-4 text-right">{{ order.markup_price | php }}</div>
+                                        <div class="col-4 text-right">Shipping Fee:</div>
+                                        <div class="col-4 text-right">+ {{ (order.shipping_fee * order.cart.quantity) | php }}</div>
                                     </div>
                                     <div class="row justify-content-end align-items-end">                             
                                         <div class="col-4 text-right">Total Price:</div>

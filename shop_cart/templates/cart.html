@@ -94,7 +94,7 @@
                                     <div class="modal-body">
                                         <p class="font-weight-bold"> Cart Item #{{ loop.index }}</p>
                                         <p>{{ item.item_name }}</p>
-                                        <p>For: <span id="order_total_price{{ item.id }}">{{ ((item.price * item.quantity * php_rate) + markup_price) | round_up() | php }}</span></p>
+                                        <p>For: <span id="order_total_price{{ item.id }}">{{ (item.quantity * ((item.price * php_rate) + shipping_fee)) | round_up() | php }}</span></p>
                                     </div>
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -172,16 +172,14 @@
                     </div>
                     <div class="card bg-light">
                         <div class="card-body">
+                            <p class="font-weight-bold">Estimated Price</p>
                             {% for item in items.items %}
                                 <h6 class="card-title mt-2 mb-1">Cart Item #{{ loop.index }}</h6>
                                 <div class="row justify-content-end align-items-end">                             
                                     <div class="col-6 text-right">Total Price:</div>
-                                    <div class="col-6 text-right"><span id="cart_total_price{{ item.id }}">{{ ((item.price * item.quantity * php_rate) + markup_price) | round_up() | php }}</span></div>
+                                    <div class="col-6 text-right"><span id="cart_total_price{{ item.id }}">{{ (item.quantity * ((item.price * php_rate) + shipping_fee)) | round_up() | php }}</span></div>
                                 </div>
                             {% endfor %}
-                        </div>
-                        <div>
-                            <small class="float-right pt-3 mb-0"><span class="text-muted">w/ markup price</span></small>
                         </div>
                     </div>
                 </div>

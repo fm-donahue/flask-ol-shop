@@ -120,3 +120,6 @@ div#summary_items>div.sticky {
     position: sticky;
     top: 5px;
 }
+.carousel-control-next, .carousel-control-prev {
+    filter: invert(100%);
+}

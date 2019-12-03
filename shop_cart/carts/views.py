@@ -18,7 +18,7 @@ carts = Blueprint('carts', __name__)
 @carts.route('/cart', methods=['GET', 'POST'])
 @login_required
 def cart():
-    markup_price = 3000
+    shipping_fee = 3000
     php_rate = round_up(currency())
     page = request.args.get('page', 1, type=int)
     items = Cart.query.filter_by(user_id=current_user.get_id(), order=None) \
@@ -45,22 +45,22 @@ def cart():
         db.session.commit()
         flash('Item added!', 'success')
         return redirect(url_for('carts.cart'))
-    return render_template('cart.html', markup_price=markup_price,
+    return render_template('cart.html', shipping_fee=shipping_fee,
                            php_rate=php_rate, items=items, form=form)
 
 
 @carts.route('/cart/<int:cart_id>/order', methods=['POST'])
 @login_required
 def order_item(cart_id):
-    markup_price = 3000
+    shipping_fee = 3000
     item = Cart.query.get_or_404(cart_id)
     if item.customer != current_user:
         abort(403)
 
-    total_price = round_up(((item.price * item.quantity) * currency())
-                           + markup_price)
+    total_price = round_up(item.quantity * ((item.price * currency())
+                           + shipping_fee))
     order = Order(total_price=total_price, balance=str(total_price),
-                  markup_price=markup_price, user_id=item.customer.id,
+                  shipping_fee=shipping_fee, user_id=item.customer.id,
                   cart_id=cart_id)
 
     item.php_rate = currency()

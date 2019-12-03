@@ -217,9 +217,9 @@ class Shipment(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     tracking_number = db.Column(db.String)
     estimated_date = db.Column(db.Date, index=True)
-    picture1 = db.Column(db.String(20))
-    picture2 = db.Column(db.String(20))
-    picture3 = db.Column(db.String(20))
+    picture1 = db.Column(db.String(25))
+    picture2 = db.Column(db.String(25))
+    picture3 = db.Column(db.String(25))
     order_id = db.Column(db.Integer, db.ForeignKey('order.id'), unique=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
 

@@ -18,11 +18,3 @@ class AddItemForm(FlaskForm):
     order_details = StringField('Order Details', widget=TextArea())
     url = StringField("Item's Website", validators=[DataRequired(), URL()])
     submit = SubmitField('Add Item')
-
-
-class UpdateItemForm(FlaskForm):
-    quantity = IntegerField('Quantity', validators=[DataRequired(),
-                            NumberRange(min=1)],
-                            widget=Input(input_type="number"))
-    # order_details = TextAreaField('Order Details')
-    submit = SubmitField('Update')

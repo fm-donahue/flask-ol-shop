@@ -13,5 +13,5 @@ class Config:
     FLASK_ADMIN_SWATCH = 'simplex'
     ADMIN_USER = os.environ.get('liloshipping_admin_user')
     ADMIN_PASSWORD = os.environ.get("liloshipping_admin_password")
-
     TEMPLATES_AUTO_RELOAD = True
+    CLOUDINARY_URL = os.environ.get('cloudinary_url')

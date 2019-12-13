@@ -9,6 +9,10 @@ from flask_sqlalchemy import SQLAlchemy
 from shop_cart.config import Config
 from shop_cart.helpers import date_format, php, round_up, transaction_id, usd
 
+import os
+
+basedir = os.path.abspath(os.path.dirname(__file__))
+
 db = SQLAlchemy()
 migrate = Migrate()
 bcrypt = Bcrypt()

@@ -1,11 +1,12 @@
 import os
 import string
 
+import cloudinary.uploader
 from flask import (Blueprint, abort, current_app, flash, jsonify, redirect,
                    render_template, request, url_for)
 from flask_login import current_user, login_required
 
-from shop_cart import db
+from shop_cart import basedir, db
 from shop_cart.carts.forms import AddItemForm
 from shop_cart.carts.utils import save_picture
 from shop_cart.helpers import currency, round_up
@@ -43,6 +44,12 @@ def cart():
                     url=form.url.data, user_id=current_user.id)
         db.session.add(cart)
         db.session.commit()
+
+        pics_url = os.path.join(basedir, 'static/pics/' + picture_file)
+        cloud_file, _ = os.path.splitext(picture_file)
+        cloudinary.uploader.upload(f'{pics_url}',
+                                   public_id=f'lilo_pics/{cloud_file}')
+
         flash('Item added!', 'success')
         return redirect(url_for('carts.cart'))
     return render_template('cart.html', shipping_fee=shipping_fee,

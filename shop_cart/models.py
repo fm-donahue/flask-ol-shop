@@ -5,13 +5,13 @@ from datetime import datetime
 
 from flask import Flask, Markup, abort, current_app, session, url_for
 from flask_admin.contrib.sqla import ModelView
-from flask_admin.form import ImageUploadField
 from flask_admin.menu import MenuLink
 from flask_login import UserMixin
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 from wtforms import validators
 
 from shop_cart import admin, db, login_manager
+from shop_cart.helpers import CloudinaryImageUpload
 
 app = Flask(__name__)
 
@@ -248,15 +248,14 @@ class ShipmentView(MyModelView):
         if not pic_list.get(name):
             return ''
 
-        return Markup("<a href='{}' target='_blank'>View Image</a>"
-                      .format(url_for('static', filename=f'{pic_list.get(name)}')))
+        return Markup(f"<a href='https://res.cloudinary.com/dxfwonedh/image/upload/lilo_pics/{pic_list.get(name)}'"
+                      "target='_blank'>View Image</a>")
 
     def upload_image(num):
-        return ImageUploadField(f'Picture{num}',
-                                base_path=os.path.join(app.root_path, 'static'),
-                                relative_path='pics/',
-                                namegen=picture_name,
-                                max_size=(512, 512, False))
+        return CloudinaryImageUpload(f'Picture{num}',
+                                     base_path=os.path.join(app.root_path, 'static/pics'),
+                                     namegen=picture_name,
+                                     max_size=(512, 512, False))
 
     column_formatters = {
         'picture1': _list_thumbnail,

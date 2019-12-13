@@ -1,8 +1,10 @@
 import os
 from math import ceil
 
+import cloudinary.uploader
 import requests
 from flask import abort
+from flask_admin.form import ImageUploadField
 
 
 def usd(value):
@@ -69,3 +71,12 @@ def currency():
 
 def round_up(value):
     return ceil(value * 100) / 100
+
+
+class CloudinaryImageUpload(ImageUploadField):
+    def _save_image(self, image, path, format='JPEG'):
+        super()._save_image(image=image, path=path)
+
+        image_name = (os.path.split(path)[1]).split('.')
+        cloudinary.uploader.upload(f'{path}',
+                                   public_id=f'lilo_pics/{image_name[0]}')

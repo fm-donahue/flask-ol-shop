@@ -3,3 +3,4 @@
 .venv/
 __pycache__/
 shop_cart/static/pics/
+shop_cart/site.db

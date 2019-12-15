@@ -86,7 +86,7 @@ footer nav.navbar {
 a#transaction_details:hover {
     background-color: #b8b8b8;
 }
-.container#account {
+.container#account, .container#contact, .container#about {
     padding: 30px;
     margin: 40px auto;
     border: 1px solid #d4d4d4;
@@ -96,15 +96,21 @@ a#transaction_details:hover {
 .navbar-nav.contents>li>a {
     font-size: 1.2em;
 }
-.nav-tabs>li>a {
+li.shipment_nav>a.nav-link {
     padding-top: 3px;
     padding-bottom: 3px;
     font-size: 0.8em;
     color: gray;
     margin: 0px;
 }
-.nav-tabs>li>a.nav-link.active {
+li.shipment_nav>a.nav-link.active {
     color: black;
+    background: #fff4e7;
+}
+@media only screen and (max-width: 921px) {
+    .shipment_nav {
+        width: 100%;
+    }
 }
 #total_price_quantity, #total_item_price, #total_price {
     text-decoration: overline;
@@ -122,4 +128,22 @@ div#summary_items>div.sticky {
 }
 .carousel-control-next, .carousel-control-prev {
     filter: invert(100%);
+}
+.steps {
+    border: 1px solid #d4d4d4;
+    border-radius: 5px;
+    background-color: #fffefd;
+}
+a.prohibited_items:hover {
+    background-color: white;
+    color: red;
+}
+a>.collapse {
+    color: black;
+}
+div#common_items {
+    padding: 10px;
+    border: 1px solid #d4d4d4;
+    border-radius: 5px;
+    background-color: #fffefd;
 }

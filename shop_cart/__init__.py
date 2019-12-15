@@ -39,11 +39,13 @@ def create_app(config_class=Config):
     admin.init_app(app)
     login_manager.init_app(app)
 
+    from shop_cart.main.views import main
     from shop_cart.carts.views import carts
     from shop_cart.users.views import users
     from shop_cart.shipments.views import ship
     from shop_cart.errors.handlers import errors
 
+    app.register_blueprint(main)
     app.register_blueprint(users)
     app.register_blueprint(carts)
     app.register_blueprint(ship)

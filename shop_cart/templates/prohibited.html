@@ -1,0 +1,155 @@
+{% extends "layout.html" %}
+
+
+{% block title %}
+    Prohibited Items
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h3 class="mb-3 font-weight-normal text-center"><i class="fas fa-ban"></i>Prohibited Items</h3>
+    <div class="mb-3" id="common_items">
+        <h5>Some common Prohibited Items are:</h5>
+        <div class="row">
+            <div class="col-lg">
+                All Telecommunications Equipment:
+                <ul>
+                    <li>Mobile phones</li>
+                    <li>2-way radios</li>
+                </ul>
+            </div>
+            <div class="col">
+                Motor Vehicle Parts & Accessories that are:
+                <ul>
+                    <li>Used (regardless of size)</li> 
+                    <li>Replacement parts (such as side mirrors, interior panels, headlight assemblies, exhaust components, engine parts)</li>
+                    <li>Any kind of tires and wheels (aka mag wheels)</li>
+                    <li>Motor oils and fluids</li>
+                </ul>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg">
+                Size Restrictions:
+                <ul>
+                    <li>Specifically, appliances or furniture with any side exceeding 48 inches and/or weighs more than 75 pounds</li>
+                </ul>
+            </div>
+            <div class="col">
+                Commercial Quantity:
+                <ul>
+                    <li>Anything exceeding 12 pieces of the same type of item regardless of variant (color, size, brand, etc.)</li>
+                </ul>  
+            </div>
+        </div>
+    </div>
+    <a class="btn btn-outline-danger btn-block text-left prohibited_items p-3" data-toggle="collapse" href="#DangerousGoods" role="button" aria-expanded="false" aria-controls="DangerousGoods">
+        Flammable and Dangerous Goods
+        <div class="collapse mt-2" id="DangerousGoods">
+            <ul>
+                <li>Dangerous Goods or hazardous materials (corrosive, explosives, toxics, gasoline, motor oil, fluid or other substances).</li>
+                <li>Crossbows, arrows, swords and knives.</li>
+                <li>Knives with blades exceeding 7 inches in length.</li>
+                <li>Chemicals (including those in the California Proposition 65 list) and fertilizers.</li>
+                <li>Illegal drugs and narcotics.</li>
+                <li>All prescription drugs whether accompanied by a prescription or not
+                    Poisonous products and infectious substances.</li>
+                <li>Packages that are wet, leaking or that emit a strong odor of any kind.</li>
+                <li>All compressed gases (liquified, non-liquified, dissolved) in pressurized containers are deemed hazardous because of the high pressures inside the cylinders.</li>
+                <li>Spare/extra rechargeable batteries and Powerbanks.</li>
+                <li>Hazardous materials, hazardous waste, including, but not limited to used or unused needles (Hypodermic and any other kind), syringes, or other medical wastes.</li>
+                <li>Human or animal remains, corpses, organs, embryos, and body parts or cremated or disinterred human remains.</li>
+                <li>Anything labeled as Flammable.</li>
+            </ul>
+        </div>
+    </a>
+    <a class="btn btn-outline-danger btn-block text-left prohibited_items p-3" data-toggle="collapse" href="#AnimalsPlants" role="button" aria-expanded="false" aria-controls="AnimalsPlants">
+        Animal and Plants
+        <div class="collapse mt-2" id="AnimalsPlants">
+            <ul>
+                <li>Animals, such as birds, fish, reptiles, dead animals or animal that has been mounted.</li>
+                <li>Plants, plant materials, seeds, including cut flowers.</li>
+                <li>Animal products, human blood and urine samples.</li>
+            </ul>
+        </div>
+    </a>
+    <a class="btn btn-outline-danger btn-block text-left prohibited_items p-3" data-toggle="collapse" href="#Weapons" role="button" aria-expanded="false" aria-controls="Weapons">
+        Guns, Ammunitions and Weapons
+        <div class="collapse mt-2" id="Weapons">
+            <ul>
+                <li>Dynamite, gunpowder, ammunitions and other explosives, firearms and weapons of war, accessories, replicas and parts thereof.</li>
+                <li>All types of guns, including bullets and accessories, including Air Soft guns.</li>
+            </ul>
+        </div>
+    </a>
+    <a class="btn btn-outline-danger btn-block text-left prohibited_items p-3" data-toggle="collapse" href="#RawMaterials" role="button" aria-expanded="false" aria-controls="RawMaterials">
+        Raw Materials
+        <div class="collapse mt-2" id="RawMaterials">
+            <ul>
+                <li>Tobacco products (raw or finished, cigarettes, vapes, and all accessories).</li>
+                <li>Furs or carpets made of animal skin.</li>
+                <li>Any product made from animal hide or bone, including doggie treats and chew toys.</li>
+            </ul>
+        </div>
+    </a>
+    <a class="btn btn-outline-danger btn-block text-left prohibited_items p-3" data-toggle="collapse" href="#Monetary" role="button" aria-expanded="false" aria-controls="Monetary">
+        Monetary, Bank Notes and Other Valuables
+        <div class="collapse mt-2" id="Monetary">
+            <ul>
+                <li>Cash, credit card, ATM card, and passbook.</li>
+                <li>Articles of unusual value, such as priceless art, jewelry (including watches and costume jewelry), collectibles, and antiques.</li>
+                <li>Cultural artifacts, pottery, and ceramic tableware.</li>
+                <li>Cash, checks, coins, stamps, negotiable stocks, bonds, bank drafts, cash letters, and other negotiable instruments equivalent to cash.</li>
+                <li>Lottery tickets and gambling devices.</li>
+            </ul>
+        </div>
+    </a>
+    <a class="btn btn-outline-danger btn-block text-left prohibited_items p-3" data-toggle="collapse" href="#PerishableItems" role="button" aria-expanded="false" aria-controls="PerishableItems">
+        Perishable Items, Foods, Medicine and Liquid Items
+        <div class="collapse mt-2" id="PerishableItems">
+            <ul>
+                <li>Perishable goods that require refrigeration.</li>
+                <li>Alcohol or alcoholic beverages exceeding 2 bottles.</li>
+            </ul>
+        </div>
+    </a>
+    <a class="btn btn-outline-danger btn-block text-left prohibited_items p-3" data-toggle="collapse" href="#SizeRestriction" role="button" aria-expanded="false" aria-controls="SizeRestriction">
+        Size Restrictions
+        <div class="collapse mt-2" id="SizeRestriction">
+            <ul>
+                <li>Specifically, appliances or furniture with any side exceeding 48 inches and/or weighs more than 75 pounds.</li>
+            </ul>
+        </div>
+    </a>
+    <a class="btn btn-outline-danger btn-block text-left prohibited_items p-3" data-toggle="collapse" href="#CommercialQty" role="button" aria-expanded="false" aria-controls="CommercialQty">
+        Items in Commercial Quantity (13 or More Items)
+        <div class="collapse mt-2" id="CommercialQty">
+            LiloShipping will only process a maximum of 12 pieces of the same item per transaction. LiloShipping will not process items in commercial quantities. The Philippine Bureau of Customs (B.O.C.) defines commercial quantities as 13 pieces or more of the same item.
+
+            <br>Example:
+
+            <ul>
+                <li>15 bags of different colors and brands are considered 15 pieces of the same kind of item (bags) and is therefore considered commercial quantity;</li>
+                <li>20 pairs of shoes of different sizes and brands, are considered 20 pieces of the same kind of item (shoes), and is therefore considered a commercial quantity.</li>
+            </ul>
+        </div>
+    </a>
+    <a class="btn btn-outline-danger btn-block text-left prohibited_items p-3" data-toggle="collapse" href="#Other" role="button" aria-expanded="false" aria-controls="Other">
+        Other
+        <div class="collapse mt-2" id="Other">
+            <ul>
+                <li>Counterfeit goods like, but not limited to fake branded bags, shoes, etc.</li>
+                <li>Large appliances and home furniture.</li>
+                <li>Appliances, regardless of size, with compressors.</li>
+                <li>Sex toys and all related paraphernalia (pornographic material, anything that is obscene in nature).</li>
+                <li>Clothes or items bearing any verses of the Quran.</li>
+                <li>Video machines (VCR, DVD players, Blu-Ray players) except video game systems.</li>
+                <li>Documents of any kind such as letters and mail.</li>
+                <li>Batik sarong.</li>
+                <li>All Auto Parts & Accessories.</li>
+                <li>All Telecommunications Equipment (e.g. mobile phones, 2-way radios).</li>
+            </ul>
+        </div>
+    </a>
+</div>
+{% endblock %}

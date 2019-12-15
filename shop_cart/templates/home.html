@@ -1,0 +1,58 @@
+{% extends "layout.html" %}
+
+
+{% block title %}
+    Home
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        {% if current_user.is_authenticated %}
+        <nav class="navbar navbar-expand-md navbar-light mb-4">
+            <ul class="navbar-nav contents mr-auto">
+                <li class="nav-item mr-5"><a class="nav-link" href="{{ url_for('carts.cart') }}">Cart</a></li>
+                <li class="nav-item"><a class="nav-link" href="{{ url_for('ship.shipments', sub_nav='all') }}">Shipments</a></li>
+            </ul>
+        </nav>
+        {% endif %}
+        <h2 class="text-center m-4 p-3">
+            How to use LiloShipping
+        </h2>
+        <div class="steps row m-3">
+            <div class="col-lg text-center p-3 mt-2 mb-2">
+                <i class="far fa-id-card fa-2x mb-2"></i>
+                <h5>
+                    1. Create an account.
+                </h5>
+            </div>
+            <div class="col-lg text-center p-3 mt-2 mb-2">
+                <i class="fas fa-search fa-2x mb-2"></i>
+                <h5>
+                    2. Find items from US online stores.
+                </h5>
+            </div>
+            <div class="col-lg text-center p-3 mt-2 mb-2">
+                <i class="fas fa-cart-plus fa-2x mb-2"></i>
+                <h5>
+                    3. Add them to your cart by filling up the forms.
+                </h5>
+            </div>
+            <div class="col-lg text-center p-3 mt-2 mb-2">
+                <i class="fas fa-box-open fa-2x mb-2"></i>
+                <h5>
+                    4. Pay and we'll deliver it to you.
+                </h5>
+            </div>
+        </div>
+        {% if not current_user.is_authenticated %}
+            <div class="text-center mt-3">
+                <a href="{{ url_for('users.register') }}" class="btn btn-outline-info" role="button" aria-disabled="true">Sign Up Now</a>
+            </div>
+        {% endif %}
+        <div class="text-center m-3">
+            <small class="text-muted">
+                *Note: Available only in Iloilo Area.
+            </small>
+        </div>
+    </div>
+{% endblock %}

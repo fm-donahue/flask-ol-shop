@@ -1,6 +1,6 @@
 # flask-ol-shop
 
-A Python Flask web application where users from Iloilo, Philippines will order items in the U.S. and ship them.
+A sample of Python-Flask web application.
 
 For demo, please use:  
 Email: demo@demo.com  
